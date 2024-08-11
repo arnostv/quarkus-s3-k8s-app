@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: s3-k8s-app-service-account
+  namespace: default
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-k8s-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3-k8s-app
+  template:
+    metadata:
+      labels:
+        app: s3-k8s-app
+    spec:
+      serviceAccountName: s3-k8s-app-service-account
+      containers:
+        - name: s3-k8s-app
+          image: 376129882994.dkr.ecr.us-east-1.amazonaws.com/s3-k8s-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATAFETCH_S3_BUCKET
+              value: "put-here-name-of-test-bucket-1"
+            - name: DATAFETCH_S3_KEY
+              value: "file1.txt"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3-k8s-app-service
+spec:
+  selector:
+    app: s3-k8s-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer

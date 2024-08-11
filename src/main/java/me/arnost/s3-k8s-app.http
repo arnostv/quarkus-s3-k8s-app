@@ -1,0 +1,11 @@
+### GET request to example server
+
+GET http://localhost:8080/datafetch/data
+Content-Type: */*
+
+###
+
+GET http://localhost:8080/datafetch/whoami
+Content-Type: */*
+
+###

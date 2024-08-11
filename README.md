@@ -1,4 +1,40 @@
-# s3-k8s-app
+# quarkus-s3-k8s-app
+
+Simple application to run in AWS EKS kubernetes, access S3 object and print it's AWS identity.
+
+Environment variables:
+
+Override
+
+    DATAFETCH_S3_BUCKET=my-test-bucket
+    DATAFETCH_S3_KEY=file1.txt
+
+
+To test locally it's possible to use Access key and Secret access key
+
+    AWS_ACCESS_KEY_ID=...
+    AWS_SECRET_ACCESS_KEY=...
+
+
+Deploy in K8S:
+
+
+Setup service account
+
+- official documentation https://docs.aws.amazon.com/eks/latest/userguide/associate-service-account-role.html
+- short documentation https://rahullokurte.com/how-to-connect-to-s3-from-eks-using-the-iam-role-for-the-service-account
+
+(?Initial my-policy.json for access to bucket wrong? Should it be `"Resource": "arn:aws:s3:::my-pod-secrets-bucket/*"` ? - add `*` at the end?)
+
+
+Expected log message:
+
+    BlobStoreDataFetch initialized with S3 client software.amazon.awssdk.services.s3.DefaultS3Client@15124d4e, bucket <my-bucket>, key <object-key>
+    Called identity is {arn=arn:aws:sts::<account>:assumed-role/<role>/aws-sdk-java-<123456790123456789>, account=<account>}
+
+
+---
+
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
